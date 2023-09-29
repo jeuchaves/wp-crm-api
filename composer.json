@@ -1,0 +1,13 @@
+{
+    "name": "rise/wp-crm-api",
+    "description": "Plugin para integrar a plataforma da RD Station (CRM) com um site no WordPress",
+    "type": "project",
+    "license": "GPL",
+    "autoload": {
+        "psr-4": {
+            "WPCRM\\Includes\\":"includes/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {}
+}
