@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 use WPCRM\Includes\Activate;
 use WPCRM\Includes\Deactivate;
+use WPCRM\Includes\Page;
 
 class Singleton
 {
@@ -53,11 +54,21 @@ class Plugin extends Singleton {
 
     private $version = "0.1.0";
 
+    private $title = "Integração CRM";
+    private $menu_name = "Integração CRM";
+    private $menu_slug = "integracao-crm";
+
     public function getVersion() {
         return $this->version;
     }
 
-    public function init() { }
+    public function init() {
+        
+    }
+
+    public function deinit() {
+
+    }
 
 	public function activate()
 	{
@@ -68,5 +79,9 @@ class Plugin extends Singleton {
     {
         Deactivate::deactivate();
 	}
+
+    public function add_menu_page() {
+        Page::add_menu_page($this->title, $this->menu_name, $this->menu_slug);
+    }
 
 }

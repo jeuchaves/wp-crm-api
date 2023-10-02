@@ -39,4 +39,7 @@ if (class_exists('Plugin')) {
 
     // Desativação do plugin
     register_deactivation_hook(WPCRM_PLUGIN_FILE, array(WPCRM(), 'deactivate'));
+
+    // Adicionar página no menu
+    add_action('admin_menu', array(WPCRM(), 'add_menu_page'));
 }
