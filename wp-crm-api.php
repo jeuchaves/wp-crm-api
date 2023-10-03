@@ -19,9 +19,7 @@ define('WPCRM_PLUGIN_FILE', __FILE__);
 define('WPCRM_PLUGIN_PATH', untrailingslashit(plugin_dir_path(WPCRM_PLUGIN_FILE)));
 define('WPCRM_PLUGIN_URL', untrailingslashit(plugins_url('/', WPCRM_PLUGIN_FILE)));
 
-if (file_exists(WPCRM_PLUGIN_PATH . '/vendor/autoload.php')) {
-    require_once WPCRM_PLUGIN_PATH . '/vendor/autoload.php';
-}
+require_once WPCRM_PLUGIN_PATH . '/vendor/autoload.php';
 require_once WPCRM_PLUGIN_PATH . '/includes/Plugin.php';
 
 if (class_exists('Plugin')) {
@@ -40,6 +38,6 @@ if (class_exists('Plugin')) {
     // Desativação do plugin
     register_deactivation_hook(WPCRM_PLUGIN_FILE, array(WPCRM(), 'deactivate'));
 
-    // Adicionar página no menu
-    add_action('admin_menu', array(WPCRM(), 'add_menu_page'));
+    // Adição da página de configurações
+    add_action('admin_init', array(WPCRM(), 'add_settings_page'));
 }

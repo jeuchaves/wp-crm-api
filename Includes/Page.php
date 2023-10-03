@@ -2,38 +2,94 @@
 
 namespace WPCRM\Includes;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+
 defined('ABSPATH') || exit;
 
 class Page
 {
-    protected function __construct() { }
-
-    public static function WPCRM_settings_page() {
-        ?>
-        <div class="wrap">
-            <h2>Configurações de Integração CRM</h2>
-            <form method="post" action="options.php">
-                <?php settings_fields('meu_plugin_opcoes'); ?>
-                <?php do_settings_sections('meu_plugin_integracao_crm'); ?>
-                <table class="form-table">
-                    <tr valign="top">
-                        <th scope="row">Token da Aplicação</th>
-                        <td><input type="text" name="token_aplicacao" value="<?php echo esc_attr(get_option('token_aplicacao')); ?>" /></td>
-                    </tr>
-                </table>
-                <?php submit_button(); ?>
-            </form>
-        </div>
-        <?php
+    protected function __construct()
+    {
     }
 
-    public static function add_menu_page($title, $menu_name, $menu_slug)
+    public static function is_valid_token($value)
     {
-        add_menu_page($title, $menu_name, 'manage_options', $menu_slug, array(__CLASS__, 'WPCRM_settings_page'));
+        $client = new Client();
+
+        try {
+
+            $response = $client->request(
+                'GET',
+                'https://crm.rdstation.com/api/v1/token/check?token=' . $value,
+                [
+                    'headers' => [
+                        'accept' => 'application/json',
+                    ],
+                ]
+            );
+
+            // Verifique se o código de resposta é 200 OK.
+            if ($response->getStatusCode() === 200) {
+                // O token é válido, retorne true.
+                return true;
+            } else {
+                // O token não é válido, retorne false.
+                return false;
+            }
+        } catch (ClientException $e) {
+
+            // Se a exceção for lançada, isso indica um erro na solicitação.
+            // Verifique o código de resposta para determinar se o token é inválido.
+            $response = $e->getResponse();
+            if ($response && $response->getStatusCode() === 401) {
+                // O token é inválido, retorne false.
+                return false;
+            } else {
+                // Outro erro ocorreu, você pode lidar com ele de acordo com suas necessidades.
+                // Por exemplo, você pode lançar a exceção novamente ou registrar o erro.
+                // ...
+                return false;
+            }
+        }
     }
 
-    public static function remove_menu_page()
+    public static function add_settings_page()
     {
-        
+
+        register_setting(
+            'general',
+            'chave_api_minha_integracao',
+            [
+                'sanitize_callback' => function ($value) {
+                    if (!self::is_valid_token($value)) {
+                        add_settings_error(
+                            'chave_api_minha_integracao',
+                            esc_attr('chave_api_minha_integracao_error'),
+                            'Chave API não é valida',
+                            'error'
+                        );
+                        return get_option('chave_api_minha_integracao');
+                    }
+                    return $value;
+                }
+            ]
+        );
+
+        add_settings_field(
+            'chave_api_minha_integracao',
+            'chave API da minha integração',
+            function ($args) {
+                $options = get_option('chave_api_minha_integracao')
+?>
+            <input id="id__chave_api_minha_integracao" type="text" name="chave_api_minha_integracao" value=<?php echo esc_attr($options) ?>>
+<?php
+            },
+            'general',
+            'default',
+            [
+                'label_for' => 'id__chave_api_minha_integracao'
+            ]
+        );
     }
 }
