@@ -7,9 +7,11 @@ use GuzzleHttp\Exception\ClientException;
 
 class Request
 {
-	protected function __construct() { }
+    protected function __construct()
+    {
+    }
 
-	public static function is_valid_token($value)
+    public static function is_valid_token($value)
     {
         $client = new Client();
 
@@ -49,5 +51,4 @@ class Request
             }
         }
     }
-
 }

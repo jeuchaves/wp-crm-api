@@ -67,7 +67,7 @@ class Plugin extends Singleton {
 	}
 
     public function add_settings_page() {
-        Page::add_settings_page();
+        Page::init();
     }
 
 }
