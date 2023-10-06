@@ -51,4 +51,25 @@ class Request
             }
         }
     }
+
+    public static function add_contact($contato)
+    {
+        $token = get_option('wpcrm_settings_token');
+        $nome = $contato['nome'];
+        $email = $contato['email'];
+        $whatsapp = $contato['whatsapp'];
+        if (Request::is_valid_token($token)) {
+            $client = new Client();
+
+            $response = $client->request('POST', 'https://crm.rdstation.com/api/v1/contacts?token=' . $token, [
+                'body' => '{"contact":{"emails":[{"email":"' . $email . '"}],"name":"' . $nome . '","phones":[{"phone":"' . $whatsapp . '"}]}}',
+                'headers' => [
+                    'accept' => 'application/json',
+                    'content-type' => 'application/json',
+                ],
+            ]);
+
+            echo $response->getBody();
+        }
+    }
 }

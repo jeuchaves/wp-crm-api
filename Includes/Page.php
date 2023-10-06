@@ -57,12 +57,19 @@ class Page
         );
         $arr_2 = array(
             'option_group' => self::$page,
-            'option_name' => 'wpcrm_settings_contact',
-            'option_label' => 'ID do contato',
+            'option_name' => 'wpcrm_settings_contact_form',
+            'option_label' => 'ID do formulário de contato',
+            'sanitize_callback' => null
+        );
+        $arr_3 = array(
+            'option_group' => self::$page,
+            'option_name' => 'wpcrm_settings_contact_page',
+            'option_label' => 'ID da página de contato',
             'sanitize_callback' => null
         );
         self::$configuracoes[] = $arr_1;
         self::$configuracoes[] = $arr_2;
+        self::$configuracoes[] = $arr_3;
     }
 
     public static function registrar_configuracoes()
