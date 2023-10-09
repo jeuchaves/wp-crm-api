@@ -28,7 +28,7 @@ if (class_exists('Plugin')) {
     {
         return Plugin::getInstance();
     }
-    
+
     // Caregamento do plugin
     add_action('plugins_loaded', array(WPCRM(), 'init'));
 
@@ -40,4 +40,22 @@ if (class_exists('Plugin')) {
 
     // Adição da página de configurações
     add_action('admin_init', array(WPCRM(), 'add_settings_page'));
+
+    // Registrar rota AJAX para adicionar contato
+    add_action('wp_ajax_add_contato', array(WPCRM(), 'add_contato'));
+    add_action('wp_ajax_nopriv_add_contato', array(WPCRM(), 'add_contato'));
+
+    // Registrar o arquivo contato.js
+    function enqueue_contato_js() {
+        wp_enqueue_script('jquery');
+
+        wp_register_script('contato-script', WPCRM_PLUGIN_URL . '/includes/js/Contato.js', array('jquery'), '1.0', true);
+
+        wp_localize_script('contato-script', 'custom_ajax_vars', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+
+        wp_enqueue_script('contato-script');
+    }
+    add_action('wp_enqueue_scripts', 'enqueue_contato_js');
 }

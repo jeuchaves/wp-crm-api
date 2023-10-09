@@ -2,6 +2,7 @@
 
 namespace WPCRM\Includes;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
@@ -52,24 +53,54 @@ class Request
         }
     }
 
-    public static function add_contact($contato)
+    public static function sanitize_phone_number($phone) {
+        $sanitized_phone = preg_replace('/[^0-9+]/', '', $phone);
+        return $sanitized_phone;
+    }
+
+    public static function add_contact()
     {
         $token = get_option('wpcrm_settings_token');
-        $nome = $contato['nome'];
-        $email = $contato['email'];
-        $whatsapp = $contato['whatsapp'];
+        $nome = sanitize_text_field($_POST['nome']);
+        $email = sanitize_email($_POST['email']);
+        $whatsapp = Request::sanitize_phone_number($_POST['whatsapp']);
+
+        $data = [
+          'contact' => [
+            'name' => $nome,
+            'emails' => [
+                ['email' => $email]
+            ],
+            'phones' => [
+                ['phone' => $whatsapp]
+            ]
+          ]
+        ];
+
         if (Request::is_valid_token($token)) {
             $client = new Client();
 
-            $response = $client->request('POST', 'https://crm.rdstation.com/api/v1/contacts?token=' . $token, [
-                'body' => '{"contact":{"emails":[{"email":"' . $email . '"}],"name":"' . $nome . '","phones":[{"phone":"' . $whatsapp . '"}]}}',
-                'headers' => [
-                    'accept' => 'application/json',
-                    'content-type' => 'application/json',
-                ],
-            ]);
+            try {
+                $response = $client->request('POST', 'https://crm.rdstation.com/api/v1/contacts?token=' . $token, [
+                    'body' => json_encode($data),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'content-type' => 'application/json',
+                    ],
+                ]);
 
-            echo $response->getBody();
+                if($response->getStatusCode() == 200) {
+                    echo json_encode(array('sucess' => true, 'message' => 'Contato adicionado com sucesso.'));
+                } else {
+                    echo json_encode(array('sucess' => false, 'message' => 'Erro ao adicionar o contato.'));
+                }
+            } catch (Exception $e) {
+                echo json_encode(array('sucess' => false, 'message' => 'Erro ao adicionar o contato: ' . $e->getMessage()));
+            }
+        } else {
+            echo json_encode(array('success' => false, 'message' => 'Token inválido.'));
         }
+
+        exit();
     }
 }

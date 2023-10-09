@@ -1,10 +1,11 @@
 <?php
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 use WPCRM\Includes\Activate;
 use WPCRM\Includes\Deactivate;
 use WPCRM\Includes\Page;
+use WPCRM\Includes\Request;
 
 class Singleton
 {
@@ -19,12 +20,16 @@ class Singleton
      * Singleton's constructor should not be public. However, it can't be
      * private either if we want to allow subclassing.
      */
-    protected function __construct() { }
+    protected function __construct()
+    {
+    }
 
     /**
      * Cloning and unserialization are not permitted for singletons.
      */
-    protected function __clone() { }
+    protected function __clone()
+    {
+    }
 
     public function __wakeup()
     {
@@ -50,24 +55,33 @@ class Singleton
     }
 }
 
-class Plugin extends Singleton {
+class Plugin extends Singleton
+{
 
-    public function init() { }
-
-    public function deinit() { }
-
-	public function activate()
-	{
-        Activate::activate();
-	}
-
-	public function deactivate()
+    public function init()
     {
-        Deactivate::deactivate();
-	}
-
-    public function add_settings_page() {
-        Page::init();
     }
 
+    public function deinit()
+    {
+    }
+
+    public function activate()
+    {
+        Activate::activate();
+    }
+
+    public function deactivate()
+    {
+        Deactivate::deactivate();
+    }
+
+    public function add_settings_page()
+    {
+        Page::add_settings_page();
+    }
+
+    public function add_contato() {
+        Request::add_contact();
+    }
 }

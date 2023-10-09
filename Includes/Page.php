@@ -13,7 +13,7 @@ class Page
     private static $page = 'general';
     private static $configuracoes = array();
 
-    public static function init()
+    public static function add_settings_page()
     {
         self::criar_secao();
         self::criar_configuracoes();
@@ -55,6 +55,7 @@ class Page
                 return $value;
             }
         );
+        /** 
         $arr_2 = array(
             'option_group' => self::$page,
             'option_name' => 'wpcrm_settings_contact_form',
@@ -67,9 +68,10 @@ class Page
             'option_label' => 'ID da página de contato',
             'sanitize_callback' => null
         );
+        */
         self::$configuracoes[] = $arr_1;
-        self::$configuracoes[] = $arr_2;
-        self::$configuracoes[] = $arr_3;
+        //self::$configuracoes[] = $arr_2;
+        //self::$configuracoes[] = $arr_3;
     }
 
     public static function registrar_configuracoes()
