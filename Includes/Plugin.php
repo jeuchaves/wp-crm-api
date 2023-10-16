@@ -82,6 +82,6 @@ class Plugin extends Singleton
     }
 
     public function add_contato() {
-        Request::add_contact();
+        Request::add_deal();
     }
 }
