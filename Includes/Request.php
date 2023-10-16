@@ -96,6 +96,8 @@ class Request
             $client = new Client();
 
             try {
+
+                echo json_encode($data);
                 
                 $response = $client->request('POST', 'https://crm.rdstation.com/api/v1/deals?token=' . $token, [
                     'body' => json_encode($data),

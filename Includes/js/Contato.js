@@ -23,7 +23,7 @@ jQuery(document).ready(function () {
             type: 'POST',
             url: custom_ajax_vars.ajaxurl,
             data: {
-                action: 'add_negotiation',
+                action: 'add_contato',
                 nome: nome,
                 email: email,
                 whatsapp: whatsapp
