@@ -14,10 +14,6 @@ jQuery(document).ready(function () {
         var email = jQuery('input[name="your-email"]').val();
         var whatsapp = jQuery('input[name="your-whatsapp"]').val();
 
-        console.log("nome: " + nome);
-        console.log("email: " + email);
-        console.log("telefone: " + whatsapp);
-
         // Solicitação AJAX
         jQuery.ajax({
             type: 'POST',
@@ -31,9 +27,6 @@ jQuery(document).ready(function () {
             success: function (response) {
                 console.log('success');
                 console.log(response);
-
-                console.log(response.sucess);
-                console.log(response.message);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('error');

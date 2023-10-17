@@ -70,7 +70,7 @@ class Request
 
         // Deal
         $stage_id = '652d4831c1084900162b633b';
-        $name_deal = 'Nova conta: nahhora.com.br';
+        $name_deal = 'Nova conta - ' . $nome;
         
         $data = [
             'deal' => [
@@ -97,10 +97,8 @@ class Request
 
             try {
 
-                echo json_encode($data);
-                
                 $response = $client->request('POST', 'https://crm.rdstation.com/api/v1/deals?token=' . $token, [
-                    'body' => json_encode($data),
+                    'body' => '{"deal":{"deal_stage_id":"'.$stage_id.'","name":"'.$name_deal.'"},"contacts":[{"emails":[{"email":"'.$email.'"}],"name":"'.$nome.'","phones":[{"phone":"'.$whatsapp.'"}]}]}',
                     'headers' => [
                         'accept' => 'application/json',
                         'content-type' => 'application/json',
@@ -110,18 +108,17 @@ class Request
                 if($response->getStatusCode() == 200) {
                     echo json_encode(array('sucess' => true, 'message' => 'Sucesso: Negociação criada'));
                 } else {
-                    echo json_encode(array('sucess' => false, 'message' => 'Erro [requisição]: ' . $response->getStatusCode()));
+                    echo json_encode(array('sucess' => false, 'message' => 'Erro [requisição]: ' . $response));
                 }
 
             } catch (Exception $e) {
-                echo json_encode(array('sucess' => false, 'message' => 'Erro [servidor]: ' . $e->getMessage()));
+                echo json_encode(array('sucess' => false, 'message' => 'Erro [servidor]: ' . $e . ' Parametros: ' . json_encode($data)));
             }
         } else {
             echo json_encode(array('success' => false, 'message' => 'Erro: Token inválido'));
         }
 
         exit();
-
     }
 
     public static function add_contact()
